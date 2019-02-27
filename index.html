@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>simple crystal game</title>
+    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>Gem Hunter</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div id="instructions"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div id="crystals" class="col-12"></div>
+    </div>
+    
+    <div class="row">
+        <div class="col-6 text-center">
+            <h1>SCORE</h1><span id="yourscore"></span>
+        </div>    
+        <div class="col-6 text-center">
+            <h1>target</h1><span id="number-to-guess"></span>
+        </div>
+
+
+    
+    <!-- <h1>wins: <span id="wins"></span></h1> -->
+    <!-- <h1>losses: <span id="losses"></span></h1> -->
+
+</div>
+
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        //Establish necessary global variables
+        //Number to guess
+        var targetNumber = 0;
+        //Value of the Gem
+        var gemvalue = 0;
+        //counter
+        var counter = 0;
+        //wins
+        var wins = 0;
+        //losses
+        var losses = 0;
+        // instructions
+        var instructions = "You will be given a random target number at the start of each game. There are four gems. by clicking on a gem you will add to your score. You win the game by matching your score to the target number. The value of teach gem is hidden from you until you click on it. Each time the game starts the game will change the values of each gem"
+
+        //Assign and push number to guess
+        //Function to generate target number 
+        function generatetargetnumber() {
+            targetNumber = Math.floor(19 + Math.random() * (120 + 1 - 19))
+            console.log(targetNumber)
+        }
+
+        //generate target number
+        generatetargetnumber()
+        //push target number
+        $("#number-to-guess").text(targetNumber);
+        //Push your score (now equal to 0) to the screen
+        $("#yourscore").text(counter);
+        //Push instructions
+        $("#instructions").text(instructions);
+
+        // function to generate a number for each gem. 
+        function generategemvalue() {
+            gemvalue = Math.floor(1 + Math.random() * (12 + 1 - 1))
+            console.log(gemvalue)
+        }
+
+        //Function to Generate 4 gems and add them value
+        function generategems() {
+            // For loop to create, assign number and push each gem
+            for (var i = 0; i < 4; i++) {
+                // Create an immage tag
+                var imageCrystal = $("<img>");
+                // Assign class = ".gembutton".
+                imageCrystal.addClass("gembutton");
+                // Create a source link for each gem
+                imageCrystal.attr("src", "assets/images/gem" + [i] + ".png");
+                // function to generate a number for each gem. 
+                function generategemvalue() {
+                    gemvalue = Math.floor(1 + Math.random() * (12 + 1 - 1))
+                    console.log(gemvalue)
+                }
+                // Call function to generate a number for each gem
+                generategemvalue()
+                // assign an attribute to each gem with the number for each gem. 
+                imageCrystal.attr("data-crystalvalue", gemvalue);
+                // Push gems to html
+                $("#crystals").append(imageCrystal);
+            }
+        }
+
+        //Generate four gems
+        generategems();
+
+        //When a gem is clicked the score goes up
+        function clickit(){
+            $(".gembutton").on("click", function () {
+                //Extract the gem value attibute to gemscore variable
+                var gemscore = ($(this).attr("data-crystalvalue"));
+                gemscore = parseInt(gemscore);
+                //add the gemscore to the counter
+                counter += gemscore;
+                console.log("New score: " + counter);
+                //push new score to html
+                $("#yourscore").text(counter);
+
+                //if you win:
+                if (counter === targetNumber) {
+                    console.log("You win!");
+                    //add 1 to the wins variable
+                    wins++;
+                    //push new wins score to html
+                    $("#instructions").text("wins:" + wins + "losses:" + losses);
+                    //reset counter 
+                    counter = 0;
+                    //push new counter
+                    $("#yourscore").text(counter);
+                    //reset target number
+                    generatetargetnumber()
+                    //push target number
+                    $("#number-to-guess").text(targetNumber);
+                    $("#crystals").empty();
+                    generategems()
+                    clickit()
+
+                }
+
+                else if (counter >= targetNumber) {
+                    console.log("You lose!!");
+                    //add 1 to the wins variable
+                    losses++;
+                    //push new wins score to html
+                    $("#instructions").text("wins:" + wins + "losses:" + losses);
+                    //reset counter and targetnumber
+                    counter = 0;
+                    //push new counter
+                    $("#yourscore").text(counter);
+                    generatetargetnumber()
+                    //push target number
+                    $("#number-to-guess").text(targetNumber);
+                    $("#crystals").empty();
+                    generategems()
+                    clickit()
+
+                }
+
+            })
+        }
+
+        clickit()
+    </script>
+</body>
+
+</html>
