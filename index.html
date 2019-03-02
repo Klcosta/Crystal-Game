@@ -2,41 +2,45 @@
 <html>
 
 <head>
-    <title>simple crystal game</title>
+    <title>Gem Hunter</title>
     </style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.typekit.net/otr6fiu.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
 </head>
 
-<body>
+<body style="background-image: url(assets/images/cave.png)">
 <div class="container">
     <div class="row">
         <div class="col-12 text-center">
-            <h1>Gem Hunter</h1>
+            <h1 class="rounded border border-white mt-5 w-75 mx-auto p-4 rust brown">GEM HUNTER</h1>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
-            <div id="instructions"></div>
-        </div>
+    <div class="row rounded border border-white mt-4 text-center p-4 rounded brown">
+            <div id="instructions" class="rust"></div>
+            <div id="losses" class="rust"></div>
     </div>
-    <div class="row">
-        <div id="crystals" class="col-12"></div>
+    <div class="row mt-5">
+        <div id="crystals" class="col-12 text-center"></div>
     </div>
     
-    <div class="row">
-        <div class="col-6 text-center">
-            <h1>SCORE</h1><span id="yourscore"></span>
+    <div class="row pb-2 mt-5 text-center rounded border border-white brown">
+        <div class="col-6 rust">
+            <p>SCORE</p><span class="numbers border border-white rounded p-1" id="yourscore"></span>
         </div>    
-        <div class="col-6 text-center">
-            <h1>target</h1><span id="number-to-guess"></span>
+        <div class="col-6 rust">
+            <p>TARGET</p><span class="numbers border border-white rounded p-1" id="number-to-guess"></span>
         </div>
+    </div>
 
-
-    
-    <!-- <h1>wins: <span id="wins"></span></h1> -->
-    <!-- <h1>losses: <span id="losses"></span></h1> -->
+    <div>
+        <div class="row mb-4">
+            <div id="instructions2" class="rust">
+            </div>
+        </div>
+    </div>
 
 </div>
 
@@ -55,7 +59,7 @@
         //losses
         var losses = 0;
         // instructions
-        var instructions = "You will be given a random target number at the start of each game. There are four gems. by clicking on a gem you will add to your score. You win the game by matching your score to the target number. The value of teach gem is hidden from you until you click on it. Each time the game starts the game will change the values of each gem"
+        var instructions = "You will be given a random target number at the start of each game. There are four gems. by clicking on a gem you will add to your score. You win the game by matching your score to the target number. The value of teach gem is hidden from you until you click on it. Each time the game starts the game will change the values of each gem."
 
         //Assign and push number to guess
         //Function to generate target number 
@@ -106,7 +110,38 @@
         //Generate four gems
         generategems();
 
-        //When a gem is clicked the score goes up
+        //Reset function for wins and losses
+        function resetgame(){
+            //push new wins score to html
+            $("#instructions").text("wins " + wins);
+            // Assign class = ".wandl" and "col-6".
+            $("#instructions").addClass("wandl");
+            $("#instructions").addClass("col-6");
+            //push loss score to html
+            $("#losses").text("losses " + losses);
+            // Assign class = ".wandl" and "col-6"
+            $("#losses").addClass("wandl");
+            $("#losses").addClass("col-6");
+            //add text to instruction2 div
+            $("#instructions2").text("Click here to see the instructions");
+            //remove col-12 class
+            $('#instructions2').removeClass('col-12');
+            //add bootstrap classes to instructions 2
+            $("#instructions2").addClass("col-md-3 col-sm-4 brown text-center rounded border border-white mt-4 p-2")
+            //reset counter 
+            counter = 0;
+            //push new counter
+            $("#yourscore").text(counter);
+            //reset target number
+            generatetargetnumber()
+            //push target number
+            $("#number-to-guess").text(targetNumber);
+            $("#crystals").empty();
+            //generate new value for gems
+            generategems()
+            clickit()
+        }
+        //Function for when a gem is clicked the score goes up
         function clickit(){
             $(".gembutton").on("click", function () {
                 //Extract the gem value attibute to gemscore variable
@@ -123,45 +158,28 @@
                     console.log("You win!");
                     //add 1 to the wins variable
                     wins++;
-                    //push new wins score to html
-                    $("#instructions").text("wins:" + wins + "losses:" + losses);
-                    //reset counter 
-                    counter = 0;
-                    //push new counter
-                    $("#yourscore").text(counter);
-                    //reset target number
-                    generatetargetnumber()
-                    //push target number
-                    $("#number-to-guess").text(targetNumber);
-                    $("#crystals").empty();
-                    generategems()
-                    clickit()
-
+                    resetgame()
                 }
 
                 else if (counter >= targetNumber) {
                     console.log("You lose!!");
                     //add 1 to the wins variable
                     losses++;
-                    //push new wins score to html
-                    $("#instructions").text("wins:" + wins + "losses:" + losses);
-                    //reset counter and targetnumber
-                    counter = 0;
-                    //push new counter
-                    $("#yourscore").text(counter);
-                    generatetargetnumber()
-                    //push target number
-                    $("#number-to-guess").text(targetNumber);
-                    $("#crystals").empty();
-                    generategems()
-                    clickit()
-
+                    resetgame()
                 }
 
             })
         }
 
         clickit()
+
+        //When clicking the instructions2 div in order to show instructions once they have dissapeared
+        $("#instructions2").on("click", function () {
+            $("#instructions2").text(instructions);
+            $('#instructions2').removeClass('col-md-3 col-sm-4');
+            $("#instructions2").addClass("col-12")
+        });
+
     </script>
 </body>
 
